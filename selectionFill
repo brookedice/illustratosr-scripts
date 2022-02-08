@@ -1,0 +1,50 @@
+/*
+  selectionFill.jsx for Adobe Illustrator
+  Description: This script makes new A4(210mm*297mm) page(artboard) and fill it by selection object.
+  Date: January, 2022
+  Author: Palchikov Igor, email: palchikovigor4@gmail.com
+  ============================================================================
+  Please contact me if you need some help or customization of this script
+*/
+
+var currentDoc = app.activeDocument;
+
+app.coordinateSystem = CoordinateSystem.ARTBOARDCOORDINATESYSTEM;
+app.executeMenuCommand("group");
+app.executeMenuCommand("Fit Artboard to selected Art");
+
+
+//create new artboard
+var sel = currentDoc.selection;
+var selWidth = currentDoc.selection[0].width;
+var selHeight = currentDoc.selection[0].height;
+
+var xCounts = Math.floor(597 / selWidth);
+var yCounts = Math.floor(841 / selHeight);
+
+//add A4artboard size
+currentDoc.artboards.add([0, 0, 596, -842]);
+
+//delete old atrboard
+var pages = currentDoc.artboards;
+pages[0].remove();
+
+function copyStep () {
+	var xy = [xCounts, yCounts];
+	var sWidth = app.activeDocument.selection[0].width;
+	var sHeight = app.activeDocument.selection[0].height;
+ 
+	for (n = 0; n < xy[1]; n++) {
+		for (i = 0; i < xy[0]; i++) {
+			app.activeDocument.selection[0].duplicate();
+			app.activeDocument.selection[0].left = app.activeDocument.selection[0].left + i * sWidth;
+		}
+		app.activeDocument.selection[0].top = app.activeDocument.selection[0].top - sHeight;
+	}
+	app.activeDocument.selection[0].remove();
+
+} 
+copyStep();
+
+
+
